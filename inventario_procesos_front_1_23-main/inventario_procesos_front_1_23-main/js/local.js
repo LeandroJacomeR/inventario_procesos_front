@@ -58,6 +58,9 @@ function listar(){
                     <a href="#" onclick="verUsuario('${usuario.id}')" class="btn btn-outline-info">
                         <i class="fa-solid fa-eye"></i>
                     </a>
+                    <a href="#" onclick="eliminaUsuario('${usuario.id}')" class="btn btn-outline-danger">
+                            <i class="fa-solid fa-trash"></i>
+                    </a>
                     </td>
                 </tr>`;
                 
@@ -76,7 +79,7 @@ function eliminaUsuario(id){
             'Authorization': localStorage.token
         },
     }
-    fetch(urlApi+"/api/users/"+id,settings)
+    fetch(urlApi+"/user/"+id,settings)
     .then(response => response.json())
     .then(function(data){
         listar();
@@ -111,6 +114,10 @@ function verModificarUsuario(id){
                     <input type="text" class="form-control" name="firstName" id="firstName" required value="${usuario.firstName}"> <br>
                     <label for="lastName"  class="form-label">Last Name</label>
                     <input type="text" class="form-control" name="lastName" id="lastName" required value="${usuario.lastName}"> <br>
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" name="address" id="address" value="${usuario.address}"> <br>
+                    <label for="birthday" class="form-label">Birthday</label>
+                    <input type="date" class="form-control" id="birthday" name="birthday" value="${usuario.birthday}"> <br>
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" name="email" id="email" required value="${usuario.email}"> <br>
                     <label for="password" class="form-label">Password</label>
@@ -175,13 +182,40 @@ function verUsuario(id){
                     <li class="list-group-item">Nombre: ${usuario.firstName}</li>
                     <li class="list-group-item">Apellido: ${usuario.lastName}</li>
                     <li class="list-group-item">Correo: ${usuario.email}</li>
+                    <li class="list-group-item">Fecha de nacimiento: ${usuario.birthday}</li>
+                    <li class="list-group-item">Dirección: ${usuario.address}</li>
                 </ul>`;
               
             }
             document.getElementById("contentModal").innerHTML = cadena;
             var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
-            myModal.toggle();
+            myModal.show();
+
+            mostrarVehiculosUsuario(usuario.vehicles);
     })
+}
+
+function mostrarVehiculosUsuario(vehiculos) {
+    var cadena = `
+      <div class="p-3 mb-2 bg-light text-dark">
+        <h3><i class="fa-solid fa-car"></i> Vehículos Asociados</h3>
+      </div>
+      <ul class="list-group">`;
+    
+    vehiculos.forEach(function (vehiculo) {
+      cadena += `
+        <li class="list-group-item">
+          <strong>Car:</strong> ${vehiculo.car}<br>
+          <strong>Model:</strong> ${vehiculo.carModel}<br>
+          <strong>Color:</strong> ${vehiculo.carColor}<br>
+          <strong>Type:</strong> ${vehiculo.carType}<br>
+          <strong>Fuel:</strong> ${vehiculo.carFuel}<br>
+          <strong>VIN:</strong> ${vehiculo.carVin}<br>
+        </li>`;
+    });
+  
+    cadena += `</ul>`;
+    document.getElementById("contentModal").insertAdjacentHTML('beforeend', cadena);
 }
 
 function alertas(mensaje,tipo){
@@ -211,6 +245,10 @@ function registerForm(){
                 <input type="text" class="form-control" name="firstName" id="firstName" required> <br>
                 <label for="lastName"  class="form-label">Last Name</label>
                 <input type="text" class="form-control" name="lastName" id="lastName" required> <br>
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" name="address" id="address"> <br>
+                <label for="birthday" class="form-label">Birthday</label>
+                <input type="date" class="form-control" id="birthday" name="birthday"> <br>
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" name="email" id="email" required> <br>
                 <label for="password" class="form-label">Password</label>
